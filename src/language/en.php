@@ -50,7 +50,7 @@ return [
     'error_password_min_length' => 'Password must be at least 8 characters long.',
     'error_user_exists' => 'Username or email already exists.',
     'error_db_register' => 'Database error. Could not register user.',
-    'success_registration' => 'Registration successful! You can now <a href="login.php">login</a>.',
+    'success_registration' => 'Registration successful! You can now',
     'prompt_have_account' => 'Already have an account?',
     'login_here' => 'Login here',
 

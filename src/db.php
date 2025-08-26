@@ -153,7 +153,16 @@ try {
     }
 
 } catch (PDOException $e) {
-    // In a real app, you'd want to log this error and show a generic error page.
-    die("Database connection failed: " . $e->getMessage());
+    // Log the error to a file. In a real production environment, you might use a more robust logging system.
+    $log_dir = __DIR__ . '/logs';
+    if (!is_dir($log_dir)) {
+        mkdir($log_dir, 0755, true);
+    }
+    error_log(date('[Y-m-d H:i:s] ') . "Database Connection Error: " . $e->getMessage() . "\n", 3, $log_dir . '/db_errors.log');
+
+    // Show a generic error message to the user.
+    // Using http_response_code is better for APIs, but for a central db file, die() is still a common pattern to halt execution.
+    http_response_code(500);
+    die("A critical database error occurred. Please check the logs or contact support.");
 }
 ?>

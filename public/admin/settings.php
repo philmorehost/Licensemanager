@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['site_logo']) && $_FILES['site_logo']['error'] == UPLOAD_ERR_OK) {
         $target_dir = "../uploads/";
         if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true);
+            mkdir($target_dir, 0755, true);
         }
         $logo_filename = "logo." . pathinfo($_FILES["site_logo"]["name"], PATHINFO_EXTENSION);
         $target_file = $target_dir . $logo_filename;

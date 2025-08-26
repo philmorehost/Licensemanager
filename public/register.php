@@ -52,7 +52,7 @@ require_once '../src/includes/header_auth.php';
 
 <?php if ($success_message): ?>
     <div class="alert alert-success">
-        <p class="mb-0"><?= $success_message // Raw output because it contains a link ?></p>
+    <p class="mb-0"><?= htmlspecialchars(trans('success_registration')) ?> <a href="login.php"><?= trans('login_here') ?></a>.</p>
     </div>
 <?php else: ?>
     <form method="POST" action="register.php">
