@@ -62,6 +62,30 @@ try {
       FOREIGN KEY (license_id) REFERENCES licenses(id) ON DELETE SET NULL
     )");
 
+    // --- Schema Migration Check for `licenses` table ---
+    // This ensures that installations with the old schema are automatically updated.
+    $stmt = $pdo->prepare("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'licenses' AND COLUMN_NAME = 'user_id'");
+    $stmt->execute([DB_NAME]);
+    if ($stmt->fetchColumn() === false) {
+        // `user_id` column does not exist, so we need to migrate.
+
+        // 1. Drop the old `customer_email` column if it exists.
+        $check_email_col_stmt = $pdo->prepare("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'licenses' AND COLUMN_NAME = 'customer_email'");
+        $check_email_col_stmt->execute([DB_NAME]);
+        if ($check_email_col_stmt->fetchColumn() !== false) {
+            $pdo->exec("ALTER TABLE `licenses` DROP COLUMN `customer_email`");
+        }
+
+        // 2. Add the new columns and foreign keys.
+        $pdo->exec("
+            ALTER TABLE `licenses`
+            ADD COLUMN `user_id` INT NULL AFTER `domain`,
+            ADD COLUMN `package_id` INT NULL AFTER `user_id`,
+            ADD CONSTRAINT `fk_licenses_user_id` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+            ADD CONSTRAINT `fk_licenses_package_id` FOREIGN KEY (`package_id`) REFERENCES `packages`(`id`) ON DELETE SET NULL
+        ");
+    }
+
     // Add default packages if none exist
     $stmt = $pdo->query("SELECT id FROM packages");
     if ($stmt->rowCount() == 0) {
