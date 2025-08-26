@@ -7,6 +7,19 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once '../src/db.php';
 
+// Load settings
+$settings_file = '../src/settings.json';
+$settings = [];
+if (file_exists($settings_file)) {
+    $settings = json_decode(file_get_contents($settings_file), true);
+}
+$paystack_pk = $settings['paystack_public_key'] ?? '';
+
+// Fetch user's email
+$stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$user_email = $stmt->fetchColumn();
+
 // Fetch all packages
 $stmt = $pdo->query("SELECT * FROM packages ORDER BY price");
 $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -18,6 +31,7 @@ $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchase a Package - License Manager</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 <body>
 
@@ -47,16 +61,41 @@ $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <li><?= htmlspecialchars(trim($feature)) ?></li>
                             <?php endforeach; ?>
                         </ul>
-                        <form action="process_purchase.php" method="POST">
-                            <input type="hidden" name="package_id" value="<?= $package['id'] ?>">
-                            <button type="submit" class="btn btn-primary">Choose Plan</button>
-                        </form>
+                        <button type="button" class="btn btn-primary" onclick="payWithPaystack(<?= htmlspecialchars(json_encode($package)) ?>)">
+                            Choose Plan
+                        </button>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
 
+    <script>
+        function payWithPaystack(package) {
+            const handler = PaystackPop.setup({
+                key: '<?= $paystack_pk ?>',
+                email: '<?= $user_email ?>',
+                amount: package.price * 100, // Amount in kobo
+                currency: 'USD', // Or get from settings
+                ref: 'lic-' + Math.floor((Math.random() * 1000000000) + 1),
+                metadata: {
+                    user_id: <?= $_SESSION['user_id'] ?>,
+                    package_id: package.id,
+                    username: '<?= $_SESSION['username'] ?? '' ?>'
+                },
+                callback: function(response) {
+                    // This is called only after a successful payment
+                    alert('Payment successful! Your account will be updated shortly.');
+                    window.location.href = 'dashboard.php';
+                },
+                onClose: function() {
+                    // This is called when the user closes the popup
+                    alert('Transaction was not completed.');
+                }
+            });
+            handler.openIframe();
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

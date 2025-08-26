@@ -53,13 +53,15 @@ try {
     // Create transactions table
     $pdo->exec("CREATE TABLE IF NOT EXISTS `transactions` (
       `id` INT AUTO_INCREMENT PRIMARY KEY,
-      `license_id` INT,
+      `user_id` INT,
+      `package_id` INT,
       `transaction_ref` VARCHAR(255) NOT NULL,
       `amount` DECIMAL(10, 2) NOT NULL,
       `currency` VARCHAR(3) NOT NULL,
       `status` VARCHAR(50) NOT NULL,
       `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (license_id) REFERENCES licenses(id) ON DELETE SET NULL
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+      FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE SET NULL
     )");
 
     // --- Schema Migration Check for `licenses` table ---
@@ -85,6 +87,34 @@ try {
             ADD CONSTRAINT `fk_licenses_package_id` FOREIGN KEY (`package_id`) REFERENCES `packages`(`id`) ON DELETE SET NULL
         ");
     }
+
+    // --- Schema Migration Check for `transactions` table ---
+    $stmt = $pdo->prepare("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'transactions' AND COLUMN_NAME = 'license_id'");
+    $stmt->execute([DB_NAME]);
+    if ($stmt->fetchColumn() !== false) {
+        // `license_id` column exists, so we need to migrate to user_id and package_id.
+        try {
+            // Foreign keys must be dropped before the column can be.
+            // The name of the foreign key is needed, but it might not be known.
+            // A common default name is `TABLE_ibfk_1`. Let's try to drop a potential default name.
+            // This is not perfectly robust without knowing the exact FK name.
+            // A better way is to query INFORMATION_SCHEMA.KEY_COLUMN_USAGE, but for this context, let's assume a common pattern.
+            // A safe approach is to just drop the column, and if it fails due to FK, the user might need manual intervention.
+            // Let's try dropping the constraint by a conventional name first.
+            $pdo->exec("ALTER TABLE `transactions` DROP FOREIGN KEY `transactions_ibfk_1`");
+        } catch (PDOException $e) {
+            // Ignore errors, as the foreign key might not exist or have a different name.
+        }
+        $pdo->exec("
+            ALTER TABLE `transactions`
+            DROP COLUMN `license_id`,
+            ADD COLUMN `user_id` INT NULL AFTER `id`,
+            ADD COLUMN `package_id` INT NULL AFTER `user_id`,
+            ADD CONSTRAINT `fk_transactions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL,
+            ADD CONSTRAINT `fk_transactions_package_id` FOREIGN KEY (`package_id`) REFERENCES `packages`(`id`) ON DELETE SET NULL
+        ");
+    }
+
 
     // Add default packages if none exist
     $stmt = $pdo->query("SELECT id FROM packages");

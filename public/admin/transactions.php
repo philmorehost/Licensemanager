@@ -16,22 +16,22 @@ $offset = ($page - 1) * $limit;
 $search = $_GET['search'] ?? '';
 $search_params = [];
 
-// Base query
+// Base query for the new schema
 $query = "
-    SELECT t.*, l.domain, u.username
+    SELECT t.*, u.username, p.name as package_name
     FROM transactions t
-    LEFT JOIN licenses l ON t.license_id = l.id
-    LEFT JOIN users u ON l.user_id = u.id
+    LEFT JOIN users u ON t.user_id = u.id
+    LEFT JOIN packages p ON t.package_id = p.id
 ";
 $count_query = "
     SELECT count(*)
     FROM transactions t
-    LEFT JOIN licenses l ON t.license_id = l.id
-    LEFT JOIN users u ON l.user_id = u.id
+    LEFT JOIN users u ON t.user_id = u.id
+    LEFT JOIN packages p ON t.package_id = p.id
 ";
 
 if ($search) {
-    $where_clause = " WHERE t.transaction_ref LIKE ? OR l.domain LIKE ? OR u.username LIKE ?";
+    $where_clause = " WHERE t.transaction_ref LIKE ? OR u.username LIKE ? OR p.name LIKE ?";
     $query .= $where_clause;
     $count_query .= $where_clause;
     $search_param = "%{$search}%";
@@ -92,14 +92,14 @@ $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <div class="main-content">
-        <h2 class="mb-4">Manage Transactions</h2>
+        <h2 class="mb-4">Package Transactions</h2>
 
         <div class="card">
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span>All Transactions</span>
+                    <span>All Package Purchases</span>
                     <form method="GET" class="d-flex">
-                        <input type="text" name="search" class="form-control me-2" placeholder="Search..." value="<?= htmlspecialchars($search) ?>">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search Ref, User, or Package..." value="<?= htmlspecialchars($search) ?>">
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                 </div>
@@ -111,7 +111,7 @@ $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <tr>
                                 <th>Date</th>
                                 <th>User</th>
-                                <th>Domain</th>
+                                <th>Package</th>
                                 <th>Amount</th>
                                 <th>Status</th>
                                 <th>Reference</th>
@@ -125,9 +125,9 @@ $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <tr>
                                     <td><?= date('Y-m-d H:i', strtotime($tx['created_at'])) ?></td>
                                     <td><?= htmlspecialchars($tx['username'] ?? 'N/A') ?></td>
-                                    <td><?= htmlspecialchars($tx['domain'] ?? 'N/A') ?></td>
+                                    <td><?= htmlspecialchars($tx['package_name'] ?? 'N/A') ?></td>
                                     <td>$<?= htmlspecialchars(number_format($tx['amount'], 2)) ?> <?= htmlspecialchars($tx['currency']) ?></td>
-                                    <td><span class="badge bg-<?= $tx['status'] == 'completed' ? 'success' : 'warning' ?>"><?= htmlspecialchars($tx['status']) ?></span></td>
+                                    <td><span class="badge bg-success"><?= htmlspecialchars($tx['status']) ?></span></td>
                                     <td><code><?= htmlspecialchars($tx['transaction_ref']) ?></code></td>
                                 </tr>
                                 <?php endforeach; ?>
