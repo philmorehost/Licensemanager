@@ -33,11 +33,12 @@ require_once __DIR__ . '/language.php';
         <h4 class="text-center">License Manager</h4>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item"><a href="dashboard.php" class="nav-link <?= ($active_page ?? '') === 'dashboard' ? 'active' : '' ?>">Dashboard</a></li>
-            <li><a href="licenses.php" class="nav-link <?= ($active_page ?? '') === 'licenses' ? 'active' : '' ?>">Licenses</a></li>
-            <li><a href="transactions.php" class="nav-link <?= ($active_page ?? '') === 'transactions' ? 'active' : '' ?>">Transactions</a></li>
-            <li><a href="settings.php" class="nav-link <?= ($active_page ?? '') === 'settings' ? 'active' : '' ?>">Settings</a></li>
-            <li><a href="profile.php" class="nav-link <?= ($active_page ?? '') === 'profile' ? 'active' : '' ?>">Profile</a></li>
+            <li class="nav-item"><a href="dashboard.php" class="nav-link <?= ($active_page ?? '') === 'dashboard' ? 'active' : '' ?>"><?= trans('dashboard') ?></a></li>
+            <li><a href="packages.php" class="nav-link <?= ($active_page ?? '') === 'packages' ? 'active' : '' ?>"><?= trans('packages') ?></a></li>
+            <li><a href="licenses.php" class="nav-link <?= ($active_page ?? '') === 'licenses' ? 'active' : '' ?>"><?= trans('licenses') ?></a></li>
+            <li><a href="transactions.php" class="nav-link <?= ($active_page ?? '') === 'transactions' ? 'active' : '' ?>"><?= trans('transactions') ?></a></li>
+            <li><a href="settings.php" class="nav-link <?= ($active_page ?? '') === 'settings' ? 'active' : '' ?>"><?= trans('settings') ?></a></li>
+            <li><a href="profile.php" class="nav-link <?= ($active_page ?? '') === 'profile' ? 'active' : '' ?>"><?= trans('profile') ?></a></li>
         </ul>
         <hr>
         <a href="logout.php" class="btn btn-danger">Logout</a>

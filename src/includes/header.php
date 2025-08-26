@@ -32,9 +32,10 @@ require_once __DIR__ . '/language.php';
                 <ul class="navbar-nav ms-auto">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <!-- Menu for logged-in users -->
-                        <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="purchase.php">Purchase/Upgrade</a></li>
-                        <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="dashboard.php"><?= trans('dashboard') ?></a></li>
+                        <li class="nav-item"><a class="nav-link" href="purchase.php"><?= trans('purchase_upgrade') ?></a></li>
+                        <li class="nav-item"><a class="nav-link" href="api_docs.php"><?= trans('api_docs') ?></a></li>
+                        <li class="nav-item"><a class="nav-link" href="logout.php"><?= trans('logout') ?></a></li>
                     <?php else: ?>
                         <!-- Menu for logged-out users -->
                         <li class="nav-item"><a class="nav-link" href="index.php#features">Features</a></li>

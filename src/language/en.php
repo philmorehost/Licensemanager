@@ -16,6 +16,8 @@ return [
     'pricing' => 'Pricing',
     'api_docs' => 'API Docs',
     'home' => 'Home',
+    'purchase_upgrade' => 'Purchase/Upgrade',
+    'packages' => 'Packages',
 
     // Homepage
     'homepage_title' => 'Welcome - License Manager',
