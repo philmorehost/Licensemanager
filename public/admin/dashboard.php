@@ -1,6 +1,14 @@
 <?php
 require_once '../../src/db.php';
 
+// Load settings for currency
+$settings_file = '../../src/settings.json';
+$settings = [];
+if (file_exists($settings_file)) {
+    $settings = json_decode(file_get_contents($settings_file), true);
+}
+$currency = $settings['currency'] ?? 'USD';
+
 // Fetch stats
 $total_users = $pdo->query("SELECT count(*) FROM users")->fetchColumn();
 $total_licenses = $pdo->query("SELECT count(*) FROM licenses")->fetchColumn();
@@ -46,7 +54,7 @@ require_once '../../src/includes/admin_header.php';
     <div class="col-md-3"><div class="card text-center p-3"><div class="card-body"><h5>Total Users</h5><p class="h2"><?= $total_users ?></p></div></div></div>
     <div class="col-md-3"><div class="card text-center p-3"><div class="card-body"><h5>Total Licenses</h5><p class="h2"><?= $total_licenses ?></p></div></div></div>
     <div class="col-md-3"><div class="card text-center p-3"><div class="card-body"><h5>Active Licenses</h5><p class="h2"><?= $active_licenses ?></p></div></div></div>
-    <div class="col-md-3"><div class="card text-center p-3"><div class="card-body"><h5>Total Revenue</h5><p class="h2">$<?= number_format($total_revenue ?? 0, 2) ?></p></div></div></div>
+    <div class="col-md-3"><div class="card text-center p-3"><div class="card-body"><h5>Total Revenue</h5><p class="h2"><?= htmlspecialchars($currency) ?> <?= number_format($total_revenue ?? 0, 2) ?></p></div></div></div>
 </div>
 
 <div class="card mb-4">

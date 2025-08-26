@@ -1,6 +1,13 @@
 <?php
 require_once '../../src/db.php';
 
+// Load settings for currency
+$settings_file = '../../src/settings.json';
+$settings = [];
+if (file_exists($settings_file)) {
+    $settings = json_decode(file_get_contents($settings_file), true);
+}
+
 $stmt = $pdo->query("SELECT * FROM packages ORDER BY price");
 $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

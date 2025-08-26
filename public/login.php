@@ -11,15 +11,15 @@ if (isset($_SESSION['user_id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
+    $login_identifier = trim($_POST['login_identifier']);
     $password = $_POST['password'];
 
-    if (empty($email)) { $errors[] = trans('error_email_required'); }
+    if (empty($login_identifier)) { $errors[] = trans('error_login_identifier_required'); }
     if (empty($password)) { $errors[] = trans('error_password_required'); }
 
     if (empty($errors)) {
-        $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE email = ?");
-        $stmt->execute([$email]);
+        $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE email = ? OR username = ?");
+        $stmt->execute([$login_identifier, $login_identifier]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
@@ -49,8 +49,8 @@ require_once '../src/includes/header_auth.php';
 
 <form method="POST" action="login.php">
     <div class="mb-3">
-        <label for="email" class="form-label"><?= trans('form_label_email') ?></label>
-        <input type="email" class="form-control" id="email" name="email" required>
+        <label for="login_identifier" class="form-label"><?= trans('form_label_username_or_email') ?></label>
+        <input type="text" class="form-control" id="login_identifier" name="login_identifier" required>
     </div>
     <div class="mb-3">
         <label for="password" class="form-label"><?= trans('form_label_password') ?></label>
