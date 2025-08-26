@@ -31,11 +31,11 @@ $count_query = "
 ";
 
 if ($search) {
-    $where_clause = " WHERE t.transaction_ref LIKE ? OR u.username LIKE ? OR p.name LIKE ?";
+    $where_clause = " WHERE t.transaction_ref LIKE ? OR u.username LIKE ? OR p.name LIKE ? OR t.payment_method LIKE ?";
     $query .= $where_clause;
     $count_query .= $where_clause;
     $search_param = "%{$search}%";
-    $search_params = [$search_param, $search_param, $search_param];
+    $search_params = [$search_param, $search_param, $search_param, $search_param];
 }
 
 // Get total records for pagination
@@ -48,17 +48,23 @@ $total_pages = ceil($total_records / $limit);
 $query .= " ORDER BY t.created_at DESC LIMIT :limit OFFSET :offset";
 $stmt = $pdo->prepare($query);
 
-// Bind search parameters
 foreach ($search_params as $key => $value) {
     $stmt->bindValue($key + 1, $value, PDO::PARAM_STR);
 }
-
-// Bind limit and offset
 $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 
 $stmt->execute();
 $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+function getStatusBadge($status) {
+    switch ($status) {
+        case 'completed': return 'bg-success';
+        case 'pending_approval': return 'bg-warning';
+        case 'rejected': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
 
 ?>
 <!DOCTYPE html>
@@ -99,7 +105,7 @@ $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="d-flex justify-content-between align-items-center">
                     <span>All Package Purchases</span>
                     <form method="GET" class="d-flex">
-                        <input type="text" name="search" class="form-control me-2" placeholder="Search Ref, User, or Package..." value="<?= htmlspecialchars($search) ?>">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Search..." value="<?= htmlspecialchars($search) ?>">
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                 </div>
@@ -113,22 +119,32 @@ $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <th>User</th>
                                 <th>Package</th>
                                 <th>Amount</th>
+                                <th>Method</th>
                                 <th>Status</th>
-                                <th>Reference</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($transactions)): ?>
-                                <tr><td colspan="6" class="text-center">No transactions found.</td></tr>
+                                <tr><td colspan="7" class="text-center">No transactions found.</td></tr>
                             <?php else: ?>
                                 <?php foreach($transactions as $tx): ?>
                                 <tr>
                                     <td><?= date('Y-m-d H:i', strtotime($tx['created_at'])) ?></td>
                                     <td><?= htmlspecialchars($tx['username'] ?? 'N/A') ?></td>
                                     <td><?= htmlspecialchars($tx['package_name'] ?? 'N/A') ?></td>
-                                    <td>$<?= htmlspecialchars(number_format($tx['amount'], 2)) ?> <?= htmlspecialchars($tx['currency']) ?></td>
-                                    <td><span class="badge bg-success"><?= htmlspecialchars($tx['status']) ?></span></td>
-                                    <td><code><?= htmlspecialchars($tx['transaction_ref']) ?></code></td>
+                                    <td><?= htmlspecialchars($tx['currency']) ?> <?= htmlspecialchars(number_format($tx['amount'], 2)) ?></td>
+                                    <td><?= htmlspecialchars($tx['payment_method']) ?></td>
+                                    <td><span class="badge <?= getStatusBadge($tx['status']) ?>"><?= str_replace('_', ' ', htmlspecialchars($tx['status'])) ?></span></td>
+                                    <td>
+                                        <?php if ($tx['payment_method'] === 'bank_transfer' && !empty($tx['payment_proof'])): ?>
+                                            <a href="../<?= htmlspecialchars($tx['payment_proof']) ?>" class="btn btn-sm btn-info" target="_blank">View Proof</a>
+                                        <?php endif; ?>
+                                        <?php if ($tx['status'] === 'pending_approval'): ?>
+                                            <a href="approve_order.php?id=<?= $tx['id'] ?>" class="btn btn-sm btn-success">Approve</a>
+                                            <a href="reject_order.php?id=<?= $tx['id'] ?>" class="btn btn-sm btn-danger">Reject</a>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>

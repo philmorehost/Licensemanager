@@ -14,6 +14,7 @@ if (file_exists($settings_file)) {
     $settings = json_decode(file_get_contents($settings_file), true);
 }
 $paystack_pk = $settings['paystack_public_key'] ?? '';
+$currency = $settings['currency'] ?? 'USD';
 
 // Fetch user's email
 $stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
@@ -55,15 +56,20 @@ $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="col-lg-4">
                     <div class="card text-center p-4 mb-4">
                         <h3><?= htmlspecialchars($package['name']) ?></h3>
-                        <p class="h1">$<?= htmlspecialchars(number_format($package['price'], 2)) ?></p>
+                        <p class="h1"><?= htmlspecialchars($currency) ?> <?= htmlspecialchars(number_format($package['price'], 2)) ?></p>
                         <ul class="list-unstyled my-4">
                             <?php foreach (explode(',', $package['features']) as $feature): ?>
                                 <li><?= htmlspecialchars(trim($feature)) ?></li>
                             <?php endforeach; ?>
                         </ul>
-                        <button type="button" class="btn btn-primary" onclick="payWithPaystack(<?= htmlspecialchars(json_encode($package)) ?>)">
-                            Choose Plan
-                        </button>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-primary" onclick="payWithPaystack(<?= htmlspecialchars(json_encode($package)) ?>)">
+                                Pay with Card
+                            </button>
+                            <a href="bank_transfer.php?package_id=<?= $package['id'] ?>" class="btn btn-outline-secondary">
+                                Pay with Bank Transfer
+                            </a>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -75,8 +81,8 @@ $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
             const handler = PaystackPop.setup({
                 key: '<?= $paystack_pk ?>',
                 email: '<?= $user_email ?>',
-                amount: package.price * 100, // Amount in kobo
-                currency: 'USD', // Or get from settings
+                amount: package.price * 100, // Amount in kobo/cents
+                currency: '<?= $currency ?>',
                 ref: 'lic-' + Math.floor((Math.random() * 1000000000) + 1),
                 metadata: {
                     user_id: <?= $_SESSION['user_id'] ?>,
@@ -84,12 +90,10 @@ $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     username: '<?= $_SESSION['username'] ?? '' ?>'
                 },
                 callback: function(response) {
-                    // This is called only after a successful payment
                     alert('Payment successful! Your account will be updated shortly.');
                     window.location.href = 'dashboard.php';
                 },
                 onClose: function() {
-                    // This is called when the user closes the popup
                     alert('Transaction was not completed.');
                 }
             });

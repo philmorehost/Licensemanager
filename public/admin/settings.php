@@ -22,31 +22,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $settings['site_name'] = $_POST['site_name'] ?? '';
     $settings['paystack_public_key'] = $_POST['paystack_public_key'] ?? '';
     $settings['paystack_secret_key'] = $_POST['paystack_secret_key'] ?? '';
-    // Note: The license price is now part of the packages table, so this setting is deprecated.
-    // I will leave it for now to avoid breaking the old logic, but it should be removed later.
-    $settings['license_price'] = $_POST['license_price'] ?? '0.00';
+    $settings['currency'] = $_POST['currency'] ?? 'USD';
+    $settings['bank_details'] = $_POST['bank_details'] ?? '';
     $settings['smtp_host'] = $_POST['smtp_host'] ?? '';
     $settings['smtp_port'] = $_POST['smtp_port'] ?? '';
     $settings['smtp_user'] = $_POST['smtp_user'] ?? '';
-    $settings['smtp_pass'] = $_POST['smtp_pass'] ?? '';
     $settings['admin_email'] = $_POST['admin_email'] ?? '';
+
+    // Only update password if a new one is provided
+    if (!empty($_POST['smtp_pass'])) {
+        $settings['smtp_pass'] = $_POST['smtp_pass'];
+    }
 
     // Handle logo upload
     if (isset($_FILES['site_logo']) && $_FILES['site_logo']['error'] == UPLOAD_ERR_OK) {
-        $target_dir = "../../public/uploads/"; // Corrected path
+        $target_dir = "../../public/uploads/";
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
         $logo_filename = "logo." . pathinfo($_FILES["site_logo"]["name"], PATHINFO_EXTENSION);
         $target_file = $target_dir . $logo_filename;
 
-        // Allow certain file formats
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
              $error = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         } else {
             if (move_uploaded_file($_FILES["site_logo"]["tmp_name"], $target_file)) {
-                $settings['site_logo'] = 'uploads/' . $logo_filename; // Path relative to public dir
+                $settings['site_logo'] = 'uploads/' . $logo_filename;
             } else {
                 $error = "Sorry, there was an error uploading your file.";
             }
@@ -55,12 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Save settings back to JSON file
     if (!isset($error)) {
-        file_put_contents($settings_file, json_encode($settings, JSON_PRETTY_PRINT));
+        file_put_contents($settings_file, json_encode($settings, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         $success_message = 'Settings saved successfully!';
     }
 }
 
-// Recalculate webhook URL with corrected path
+// Recalculate webhook URL
 $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
 $webhook_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(__DIR__ . '/../../public'));
 $webhook_url = $base_url . $webhook_path . '/webhook.php';
@@ -126,8 +128,14 @@ $webhook_url = $base_url . $webhook_path . '/webhook.php';
                         </div>
                     </div>
                      <div class="card mb-4">
-                        <div class="card-header">Payment Gateway (Paystack)</div>
+                        <div class="card-header">Payment Settings</div>
                         <div class="card-body">
+                            <div class="mb-3">
+                                <label for="currency" class="form-label">Currency Code</label>
+                                <input type="text" class="form-control" id="currency" name="currency" value="<?= htmlspecialchars($settings['currency'] ?? 'USD') ?>" placeholder="e.g., USD, NGN, EUR">
+                            </div>
+                            <hr>
+                            <h5 class="mb-3">Paystack</h5>
                              <div class="mb-3">
                                 <label for="paystack_public_key" class="form-label">Paystack Public Key</label>
                                 <input type="text" class="form-control" id="paystack_public_key" name="paystack_public_key" value="<?= htmlspecialchars($settings['paystack_public_key'] ?? '') ?>">
@@ -136,10 +144,15 @@ $webhook_url = $base_url . $webhook_path . '/webhook.php';
                                 <label for="paystack_secret_key" class="form-label">Paystack Secret Key</label>
                                 <input type="text" class="form-control" id="paystack_secret_key" name="paystack_secret_key" value="<?= htmlspecialchars($settings['paystack_secret_key'] ?? '') ?>">
                             </div>
-                             <div class="mb-3">
-                                <label for="license_price" class="form-label">Default License Price (Legacy)</label>
-                                <input type="number" step="0.01" class="form-control" id="license_price" name="license_price" value="<?= htmlspecialchars($settings['license_price'] ?? '0.00') ?>">
-                                <small class="form-text text-muted">Note: Prices are now managed in the 'packages' table. This is a legacy setting.</small>
+                        </div>
+                    </div>
+                     <div class="card mb-4">
+                        <div class="card-header">Bank Transfer Settings</div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="bank_details" class="form-label">Bank Account Details</label>
+                                <textarea class="form-control" id="bank_details" name="bank_details" rows="4" placeholder="Bank Name: ...&#10;Account Number: ...&#10;Account Name: ..."><?= htmlspecialchars($settings['bank_details'] ?? '') ?></textarea>
+                                <small class="form-text text-muted">These details will be shown to users who choose the bank transfer option.</small>
                             </div>
                         </div>
                     </div>
@@ -162,7 +175,7 @@ $webhook_url = $base_url . $webhook_path . '/webhook.php';
                         <div class="col-md-6 mb-3"><label for="smtp_host" class="form-label">SMTP Host</label><input type="text" class="form-control" id="smtp_host" name="smtp_host" value="<?= htmlspecialchars($settings['smtp_host'] ?? '') ?>"></div>
                         <div class="col-md-6 mb-3"><label for="smtp_port" class="form-label">SMTP Port</label><input type="text" class="form-control" id="smtp_port" name="smtp_port" value="<?= htmlspecialchars($settings['smtp_port'] ?? '') ?>"></div>
                         <div class="col-md-6 mb-3"><label for="smtp_user" class="form-label">SMTP User</label><input type="text" class="form-control" id="smtp_user" name="smtp_user" value="<?= htmlspecialchars($settings['smtp_user'] ?? '') ?>"></div>
-                        <div class="col-md-6 mb-3"><label for="smtp_pass" class="form-label">SMTP Pass</label><input type="password" class="form-control" id="smtp_pass" name="smtp_pass" value=""></div>
+                        <div class="col-md-6 mb-3"><label for="smtp_pass" class="form-label">SMTP Pass</label><input type="password" class="form-control" id="smtp_pass" name="smtp_pass" placeholder="Leave blank to keep current"></div>
                         <div class="col-md-12 mb-3"><label for="admin_email" class="form-label">Admin Email (From Address)</label><input type="email" class="form-control" id="admin_email" name="admin_email" value="<?= htmlspecialchars($settings['admin_email'] ?? '') ?>"></div>
                     </div>
                 </div>

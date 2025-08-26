@@ -55,10 +55,12 @@ try {
       `id` INT AUTO_INCREMENT PRIMARY KEY,
       `user_id` INT,
       `package_id` INT,
-      `transaction_ref` VARCHAR(255) NOT NULL,
+      `transaction_ref` VARCHAR(255) NULL,
       `amount` DECIMAL(10, 2) NOT NULL,
       `currency` VARCHAR(3) NOT NULL,
-      `status` VARCHAR(50) NOT NULL,
+      `status` VARCHAR(255) NOT NULL DEFAULT 'pending',
+      `payment_method` VARCHAR(255) NOT NULL,
+      `payment_proof` VARCHAR(255) NULL,
       `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
       FOREIGN KEY (package_id) REFERENCES packages(id) ON DELETE SET NULL
@@ -115,6 +117,19 @@ try {
         ");
     }
 
+
+    // --- Schema Migration Check for `transactions` table to add payment_method and proof ---
+    $stmt = $pdo->prepare("SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'transactions' AND COLUMN_NAME = 'payment_method'");
+    $stmt->execute([DB_NAME]);
+    if ($stmt->fetchColumn() === false) {
+        $pdo->exec("
+            ALTER TABLE `transactions`
+            ADD COLUMN `payment_method` VARCHAR(255) NOT NULL AFTER `status`,
+            ADD COLUMN `payment_proof` VARCHAR(255) NULL AFTER `payment_method`,
+            MODIFY COLUMN `status` VARCHAR(255) NOT NULL DEFAULT 'pending',
+            MODIFY COLUMN `transaction_ref` VARCHAR(255) NULL
+        ");
+    }
 
     // Add default packages if none exist
     $stmt = $pdo->query("SELECT id FROM packages");
