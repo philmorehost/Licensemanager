@@ -1,0 +1,15 @@
+[07-Aug-2025 11:38:35 UTC] PHP Warning:  require(includes/PHPMailer/src/Exception.php): Failed to open stream: No such file or directory in /home/pmhmanager/public_html/webhook.php on line 83
+[07-Aug-2025 11:38:35 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'includes/PHPMailer/src/Exception.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/pmhmanager/public_html/webhook.php:83
+Stack trace:
+#0 {main}
+  thrown in /home/pmhmanager/public_html/webhook.php on line 83
+[07-Aug-2025 12:40:48 UTC] PHP Warning:  require(includes/PHPMailer/src/Exception.php): Failed to open stream: No such file or directory in /home/pmhmanager/public_html/webhook.php on line 83
+[07-Aug-2025 12:40:48 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'includes/PHPMailer/src/Exception.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/pmhmanager/public_html/webhook.php:83
+Stack trace:
+#0 {main}
+  thrown in /home/pmhmanager/public_html/webhook.php on line 83
+[12-Aug-2025 11:59:51 UTC] PHP Warning:  require(includes/PHPMailer/src/Exception.php): Failed to open stream: No such file or directory in /home/pmhmanager/public_html/webhook.php on line 83
+[12-Aug-2025 11:59:51 UTC] PHP Fatal error:  Uncaught Error: Failed opening required 'includes/PHPMailer/src/Exception.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/pmhmanager/public_html/webhook.php:83
+Stack trace:
+#0 {main}
+  thrown in /home/pmhmanager/public_html/webhook.php on line 83

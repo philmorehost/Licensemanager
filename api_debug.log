@@ -1,0 +1,100 @@
+[2025-08-04 10:11:52] --- New API Request ---
+[2025-08-04 10:11:52] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 10:11:52] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 10:11:52] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 10:25:36] --- New API Request ---
+[2025-08-04 10:25:36] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 10:25:36] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 10:25:36] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 10:36:38] --- New API Request ---
+[2025-08-04 10:36:38] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 10:36:38] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 10:36:38] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 10:36:55] --- New API Request ---
+[2025-08-04 10:36:55] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 10:36:55] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 10:36:55] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 11:24:37] --- New API Request ---
+[2025-08-04 11:24:37] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 11:24:37] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 11:24:37] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 13:49:09] --- New API Request ---
+[2025-08-04 13:49:09] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 13:49:09] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 13:49:09] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 14:02:00] --- New API Request ---
+[2025-08-04 14:02:00] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 14:02:00] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 14:02:00] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 14:15:09] --- New API Request ---
+[2025-08-04 14:15:09] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 14:15:09] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 14:15:09] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 14:15:37] --- New API Request ---
+[2025-08-04 14:15:37] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 14:15:37] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 14:15:37] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 16:09:26] --- New API Request ---
+[2025-08-04 16:09:26] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 16:09:26] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 16:09:26] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 16:09:45] --- New API Request ---
+[2025-08-04 16:09:45] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 16:09:45] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 16:09:45] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 19:01:04] --- New API Request ---
+[2025-08-04 19:01:04] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 19:01:04] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 19:01:04] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 19:01:44] --- New API Request ---
+[2025-08-04 19:01:44] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 19:01:44] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 19:01:44] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 20:27:52] --- New API Request ---
+[2025-08-04 20:27:52] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 20:27:52] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 20:27:52] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-04 20:28:04] --- New API Request ---
+[2025-08-04 20:28:04] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-04 20:28:04] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-04 20:28:04] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 07:24:45] --- New API Request ---
+[2025-08-05 07:24:45] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 07:24:45] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 07:24:45] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 07:25:23] --- New API Request ---
+[2025-08-05 07:25:23] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 07:25:23] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 07:25:23] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 10:49:59] --- New API Request ---
+[2025-08-05 10:49:59] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 10:49:59] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 10:49:59] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 10:50:22] --- New API Request ---
+[2025-08-05 10:50:22] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 10:50:22] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 10:50:22] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 12:48:44] --- New API Request ---
+[2025-08-05 12:48:44] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 12:48:44] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 12:48:44] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 12:49:09] --- New API Request ---
+[2025-08-05 12:49:09] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 12:49:09] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 12:49:09] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 21:53:56] --- New API Request ---
+[2025-08-05 21:53:56] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 21:53:56] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 21:53:56] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-05 21:54:21] --- New API Request ---
+[2025-08-05 21:54:21] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-05 21:54:21] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-05 21:54:21] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-07 12:57:14] --- New API Request ---
+[2025-08-07 12:57:14] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-07 12:57:14] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-07 12:57:14] Responding with: {"status":1,"message":"License is valid."}
+[2025-08-07 12:58:45] --- New API Request ---
+[2025-08-07 12:58:45] Received key: VALID-A7225C48C9F8AAB3, domain: app.pmhserver.name.ng
+[2025-08-07 12:58:45] SUCCESS: Found matching active license for domain 'app.pmhserver.name.ng'.
+[2025-08-07 12:58:45] Responding with: {"status":1,"message":"License is valid."}

@@ -1,0 +1,50 @@
+[2025-08-03 21:15:29] Webhook received.
+[2025-08-03 21:15:29] Event data: {"event":"charge.success","data":{"id":5206375885,"domain":"test","status":"success","reference":"lic-597832687","amount":10000,"message":null,"gateway_response":"Successful","paid_at":"2025-08-03T21:15:28.000Z","created_at":"2025-08-03T21:15:24.000Z","channel":"card","currency":"NGN","ip_address":"197.211.59.56","metadata":{"domain":"app.pmhserver.name.ng","referrer":"https://manager.pmhserver.name.ng/order.php"},"fees_breakdown":null,"log":null,"fees":150,"fees_split":null,"authorization":{"authorization_code":"AUTH_jvam4dl5m6","bin":"408408","last4":"4081","exp_month":"12","exp_year":"2030","channel":"card","card_type":"visa ","bank":"TEST BANK","country_code":"NG","brand":"visa","reusable":true,"signature":"SIG_MTX0EeKIVZyMx9aa5IE3","account_name":null,"receiver_bank_account_number":null,"receiver_bank":null},"customer":{"id":296895992,"first_name":"","last_name":"","email":"philmorehost@gmail.com","customer_code":"CUS_78z32r4niapod4s","phone":"","metadata":null,"risk_action":"default","international_format_phone":null},"plan":{},"subaccount":{},"split":{},"order_id":null,"paidAt":"2025-08-03T21:15:28.000Z","requested_amount":10000,"pos_transaction_data":null,"source":{"type":"web","source":"checkout","entry_point":"request_inline","identifier":null}}}
+[2025-08-03 21:15:29] Charge success event received.
+[2025-08-03 21:15:29] Attempting database interaction.
+[2025-08-03 21:15:37] Inserting license...
+[2025-08-03 21:15:37] License inserted with ID: 7
+[2025-08-03 21:15:37] Inserting transaction...
+[2025-08-03 21:15:37] Transaction inserted.
+[2025-08-03 21:15:46] Database transaction committed.
+[2025-08-03 21:15:46] Attempting to send email notification.
+[2025-08-04 10:10:20] Webhook received.
+[2025-08-04 10:10:20] Event data: {"event":"charge.success","data":{"id":5207707665,"domain":"test","status":"success","reference":"lic-245213821","amount":10000,"message":null,"gateway_response":"Successful","paid_at":"2025-08-04T10:10:19.000Z","created_at":"2025-08-04T10:10:12.000Z","channel":"card","currency":"NGN","ip_address":"77.68.101.226","metadata":{"domain":"app.pmhserver.name.ng","referrer":"https://manager.pmhserver.name.ng/order.php"},"fees_breakdown":null,"log":null,"fees":150,"fees_split":null,"authorization":{"authorization_code":"AUTH_rwvxidjgvh","bin":"408408","last4":"4081","exp_month":"12","exp_year":"2030","channel":"card","card_type":"visa ","bank":"TEST BANK","country_code":"NG","brand":"visa","reusable":true,"signature":"SIG_MTX0EeKIVZyMx9aa5IE3","account_name":null,"receiver_bank_account_number":null,"receiver_bank":null},"customer":{"id":296895992,"first_name":"","last_name":"","email":"philmorehost@gmail.com","customer_code":"CUS_78z32r4niapod4s","phone":"","metadata":null,"risk_action":"default","international_format_phone":null},"plan":{},"subaccount":{},"split":{},"order_id":null,"paidAt":"2025-08-04T10:10:19.000Z","requested_amount":10000,"pos_transaction_data":null,"source":{"type":"web","source":"checkout","entry_point":"request_inline","identifier":null}}}
+[2025-08-04 10:10:20] Charge success event received.
+[2025-08-04 10:10:20] Attempting database interaction.
+[2025-08-04 10:10:20] Inserting license...
+[2025-08-04 10:10:20] License inserted with ID: 1
+[2025-08-04 10:10:20] Inserting transaction...
+[2025-08-04 10:10:20] Transaction inserted.
+[2025-08-04 10:10:20] Database transaction committed.
+[2025-08-04 10:10:20] Attempting to send email notification.
+[2025-08-07 11:38:34] Webhook received.
+[2025-08-07 11:38:34] Event data: {"event":"charge.success","data":{"id":5217006018,"domain":"test","status":"success","reference":"lic-444002689","amount":10000,"message":null,"gateway_response":"Successful","paid_at":"2025-08-07T11:38:31.000Z","created_at":"2025-08-07T11:38:25.000Z","channel":"card","currency":"NGN","ip_address":"88.208.225.137","metadata":{"domain":"http://localhost","referrer":"https://manager.pmhserver.name.ng/order.php"},"fees_breakdown":null,"log":null,"fees":150,"fees_split":null,"authorization":{"authorization_code":"AUTH_8k4nk0h9tk","bin":"408408","last4":"4081","exp_month":"12","exp_year":"2030","channel":"card","card_type":"visa ","bank":"TEST BANK","country_code":"NG","brand":"visa","reusable":true,"signature":"SIG_MTX0EeKIVZyMx9aa5IE3","account_name":null,"receiver_bank_account_number":null,"receiver_bank":null},"customer":{"id":296895992,"first_name":"","last_name":"","email":"philmorehost@gmail.com","customer_code":"CUS_78z32r4niapod4s","phone":"","metadata":null,"risk_action":"default","international_format_phone":null},"plan":{},"subaccount":{},"split":{},"order_id":null,"paidAt":"2025-08-07T11:38:31.000Z","requested_amount":10000,"pos_transaction_data":null,"source":{"type":"web","source":"checkout","entry_point":"request_inline","identifier":null}}}
+[2025-08-07 11:38:34] Charge success event received.
+[2025-08-07 11:38:34] Attempting database interaction.
+[2025-08-07 11:38:34] Inserting license...
+[2025-08-07 11:38:35] License inserted with ID: 2
+[2025-08-07 11:38:35] Inserting transaction...
+[2025-08-07 11:38:35] Transaction inserted.
+[2025-08-07 11:38:35] Database transaction committed.
+[2025-08-07 11:38:35] Attempting to send email notification.
+[2025-08-07 12:40:48] Webhook received.
+[2025-08-07 12:40:48] Event data: {"event":"charge.success","data":{"id":5217198481,"domain":"test","status":"success","reference":"lic-495166308","amount":10000,"message":null,"gateway_response":"Successful","paid_at":"2025-08-07T12:40:44.000Z","created_at":"2025-08-07T12:40:40.000Z","channel":"card","currency":"NGN","ip_address":"57.128.140.231","metadata":{"domain":"localhost","referrer":"https://manager.pmhserver.name.ng/order.php"},"fees_breakdown":null,"log":null,"fees":150,"fees_split":null,"authorization":{"authorization_code":"AUTH_dkhn6ddtkt","bin":"408408","last4":"4081","exp_month":"12","exp_year":"2030","channel":"card","card_type":"visa ","bank":"TEST BANK","country_code":"NG","brand":"visa","reusable":true,"signature":"SIG_MTX0EeKIVZyMx9aa5IE3","account_name":null,"receiver_bank_account_number":null,"receiver_bank":null},"customer":{"id":296895992,"first_name":"","last_name":"","email":"philmorehost@gmail.com","customer_code":"CUS_78z32r4niapod4s","phone":"","metadata":null,"risk_action":"default","international_format_phone":null},"plan":{},"subaccount":{},"split":{},"order_id":null,"paidAt":"2025-08-07T12:40:44.000Z","requested_amount":10000,"pos_transaction_data":null,"source":{"type":"web","source":"checkout","entry_point":"request_inline","identifier":null}}}
+[2025-08-07 12:40:48] Charge success event received.
+[2025-08-07 12:40:48] Attempting database interaction.
+[2025-08-07 12:40:48] Inserting license...
+[2025-08-07 12:40:48] License inserted with ID: 3
+[2025-08-07 12:40:48] Inserting transaction...
+[2025-08-07 12:40:48] Transaction inserted.
+[2025-08-07 12:40:48] Database transaction committed.
+[2025-08-07 12:40:48] Attempting to send email notification.
+[2025-08-12 11:59:51] Webhook received.
+[2025-08-12 11:59:51] Event data: {"event":"charge.success","data":{"id":5231858345,"domain":"test","status":"success","reference":"lic-91910121","amount":10000,"message":null,"gateway_response":"Successful","paid_at":"2025-08-12T11:59:48.000Z","created_at":"2025-08-12T11:59:36.000Z","channel":"card","currency":"NGN","ip_address":"197.211.59.94","metadata":{"domain":"soaschool.pmhserver.name.ng","referrer":"https://manager.pmhserver.name.ng/order.php"},"fees_breakdown":null,"log":null,"fees":150,"fees_split":null,"authorization":{"authorization_code":"AUTH_waw60a4iuy","bin":"408408","last4":"4081","exp_month":"12","exp_year":"2030","channel":"card","card_type":"visa ","bank":"TEST BANK","country_code":"NG","brand":"visa","reusable":true,"signature":"SIG_MTX0EeKIVZyMx9aa5IE3","account_name":null,"receiver_bank_account_number":null,"receiver_bank":null},"customer":{"id":296895992,"first_name":"","last_name":"","email":"philmorehost@gmail.com","customer_code":"CUS_78z32r4niapod4s","phone":"","metadata":null,"risk_action":"default","international_format_phone":null},"plan":{},"subaccount":{},"split":{},"order_id":null,"paidAt":"2025-08-12T11:59:48.000Z","requested_amount":10000,"pos_transaction_data":null,"source":{"type":"web","source":"checkout","entry_point":"request_inline","identifier":null}}}
+[2025-08-12 11:59:51] Charge success event received.
+[2025-08-12 11:59:51] Attempting database interaction.
+[2025-08-12 11:59:51] Inserting license...
+[2025-08-12 11:59:51] License inserted with ID: 4
+[2025-08-12 11:59:51] Inserting transaction...
+[2025-08-12 11:59:51] Transaction inserted.
+[2025-08-12 11:59:51] Database transaction committed.
+[2025-08-12 11:59:51] Attempting to send email notification.
