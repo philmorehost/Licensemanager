@@ -5,6 +5,7 @@
     "license_price": "100",
     "currency": "USD",
     "bank_details": "Bank Name: Your Bank\\nAccount Number: 1234567890\\nAccount Name: Your Name",
+    "language": "en",
     "smtp_host": "mail.pmhserver.name.ng",
     "smtp_port": "465",
     "smtp_user": "admin@pmhserver.name.ng",

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../src/db.php';
+require_once '../src/includes/language.php'; // Manually include for POST logic
 
 $errors = [];
 $success_message = '';
@@ -10,95 +11,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    // Validation
-    if (empty($username)) {
-        $errors[] = 'Username is required.';
-    }
-    if (empty($email)) {
-        $errors[] = 'Email is required.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Invalid email format.';
-    }
-    if (empty($password)) {
-        $errors[] = 'Password is required.';
-    } elseif (strlen($password) < 8) {
-        $errors[] = 'Password must be at least 8 characters long.';
-    }
+    if (empty($username)) { $errors[] = trans('error_username_required'); }
+    if (empty($email)) { $errors[] = trans('error_email_required'); }
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) { $errors[] = trans('error_invalid_email'); }
+    if (empty($password)) { $errors[] = trans('error_password_required'); }
+    elseif (strlen($password) < 8) { $errors[] = trans('error_password_min_length'); }
 
-    // Check if user already exists
     if (empty($errors)) {
         $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
         $stmt->execute([$username, $email]);
         if ($stmt->fetch()) {
-            $errors[] = 'Username or email already exists.';
-        }
-    }
-
-    // Insert user if no errors
-    if (empty($errors)) {
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        $api_key = bin2hex(random_bytes(16)); // Generate a 32-character hex API key
-
-        try {
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password, api_key) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$username, $email, $password_hash, $api_key]);
-            $success_message = 'Registration successful! You can now <a href="login.php">login</a>.';
-        } catch (PDOException $e) {
-            $errors[] = 'Database error. Could not register user.';
-            // In a real app, log this error: error_log($e->getMessage());
+            $errors[] = trans('error_user_exists');
+        } else {
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            $api_key = bin2hex(random_bytes(16));
+            try {
+                $stmt = $pdo->prepare("INSERT INTO users (username, email, password, api_key) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$username, $email, $password_hash, $api_key]);
+                $success_message = trans('success_registration');
+            } catch (PDOException $e) {
+                $errors[] = trans('error_db_register');
+            }
         }
     }
 }
+
+$page_title = trans('register_page_title');
+require_once '../src/includes/header_auth.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - License Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background-color: #f8f9fa; }
-        .form-container { background: white; padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 8px rgba(0,0,0,.1); width: 100%; max-width: 400px; }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <h2 class="text-center mb-4">Create Account</h2>
 
-        <?php if (!empty($errors)): ?>
-            <div class="alert alert-danger">
-                <?php foreach ($errors as $error): ?>
-                    <p class="mb-0"><?= htmlspecialchars($error) ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+<h2 class="text-center mb-4"><?= trans('create_account_heading') ?></h2>
 
-        <?php if ($success_message): ?>
-            <div class="alert alert-success">
-                <p class="mb-0"><?= $success_message ?></p>
-            </div>
-        <?php else: ?>
-            <form method="POST" action="register.php">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" minlength="8" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Register</button>
-            </form>
-        <?php endif; ?>
-
-        <p class="text-center mt-3">
-            Already have an account? <a href="login.php">Login here</a>.
-        </p>
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+        <?php foreach ($errors as $error): ?>
+            <p class="mb-0"><?= htmlspecialchars($error) ?></p>
+        <?php endforeach; ?>
     </div>
-</body>
-</html>
+<?php endif; ?>
+
+<?php if ($success_message): ?>
+    <div class="alert alert-success">
+        <p class="mb-0"><?= $success_message // Raw output because it contains a link ?></p>
+    </div>
+<?php else: ?>
+    <form method="POST" action="register.php">
+        <div class="mb-3">
+            <label for="username" class="form-label"><?= trans('form_label_username') ?></label>
+            <input type="text" class="form-control" id="username" name="username" required value="<?= htmlspecialchars($username ?? '') ?>">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label"><?= trans('form_label_email') ?></label>
+            <input type="email" class="form-control" id="email" name="email" required value="<?= htmlspecialchars($email ?? '') ?>">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label"><?= trans('form_label_password') ?></label>
+            <input type="password" class="form-control" id="password" name="password" minlength="8" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100"><?= trans('register') ?></button>
+    </form>
+<?php endif; ?>
+
+<p class="text-center mt-3">
+    <?= trans('prompt_have_account') ?> <a href="login.php"><?= trans('login_here') ?></a>.
+</p>
+
+<?php require_once '../src/includes/footer_auth.php'; ?>
