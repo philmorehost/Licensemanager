@@ -1,74 +1,65 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_logged_in'])) {
+if (!isset($_SESSION['admin_logged_in']) || !isset($_SESSION['admin_id'])) {
     header('Location: index.php');
     exit();
 }
 
-require_once('../db.php');
-
-$success_message = '';
-$error = '';
-$current_username = '';
-
-// We must have an admin_id in the session now, set by the login page.
-if (!isset($_SESSION['admin_id'])) {
-    // If not, something is wrong, maybe the user session is old.
-    // Forcing a re-login is the safest option.
-    header('Location: logout.php');
-    exit();
-}
+require_once '../db.php';
 $admin_id = $_SESSION['admin_id'];
 
-// Get current admin username to display in the form
-try {
-    $stmt = $pdo->prepare("SELECT username FROM admins WHERE id = ?");
-    $stmt->execute([$admin_id]);
-    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($admin) {
-        $current_username = $admin['username'];
-    } else {
-        // This case is unlikely if session is valid, but good to handle.
-        $error = "Could not find your admin profile.";
-    }
-} catch (PDOException $e) {
-    $error = "Database error: " . $e->getMessage();
-}
+$success_message = '';
+$error_message = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $new_username = $_POST['username'];
-    $new_password = $_POST['password'];
-    $confirm_password = $_POST['password_confirm'];
-
+// Handle Profile Update (Username)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_username'])) {
+    $new_username = trim($_POST['username']);
     if (empty($new_username)) {
-        $error = "Username cannot be empty.";
-    } elseif (!empty($new_password) && $new_password !== $confirm_password) {
-        $error = 'Passwords do not match.';
+        $error_message = "Username cannot be empty.";
     } else {
         try {
-            if (!empty($new_password)) {
-                // Update both username and password
-                $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE admins SET username = ?, password = ? WHERE id = ?");
-                $stmt->execute([$new_username, $password_hash, $admin_id]);
-                $success_message = 'Profile updated successfully.';
-            } else {
-                // Update only username
-                $stmt = $pdo->prepare("UPDATE admins SET username = ? WHERE id = ?");
-                $stmt->execute([$new_username, $admin_id]);
-                $success_message = 'Username updated successfully.';
-            }
-            // Update the username displayed on the form
-            $current_username = $new_username;
+            $stmt = $pdo->prepare("UPDATE admins SET username = ? WHERE id = ?");
+            $stmt->execute([$new_username, $admin_id]);
+            $success_message = "Username updated successfully!";
         } catch (PDOException $e) {
-            if ($e->errorInfo[1] == 1062) { // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry
-                $error = "That username is already taken.";
+            if ($e->errorInfo[1] == 1062) {
+                $error_message = "That username is already taken.";
             } else {
-                $error = "A database error occurred: " . $e->getMessage();
+                $error_message = "A database error occurred.";
             }
         }
     }
 }
+
+// Handle Password Change
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    $stmt = $pdo->prepare("SELECT password FROM admins WHERE id = ?");
+    $stmt->execute([$admin_id]);
+    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$admin || !password_verify($current_password, $admin['password'])) {
+        $error_message = "Your current password is not correct.";
+    } elseif (empty($new_password) || strlen($new_password) < 8) {
+        $error_message = "New password must be at least 8 characters long.";
+    } elseif ($new_password !== $confirm_password) {
+        $error_message = "New passwords do not match.";
+    } else {
+        $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("UPDATE admins SET password = ? WHERE id = ?");
+        $stmt->execute([$new_password_hash, $admin_id]);
+        $success_message = "Password changed successfully!";
+    }
+}
+
+// Get current admin username for display
+$stmt = $pdo->prepare("SELECT username FROM admins WHERE id = ?");
+$stmt->execute([$admin_id]);
+$current_username = $stmt->fetchColumn();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,67 +67,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Profile - License Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; margin: 0; display: flex; }
-        .sidebar { width: 250px; background: #111827; color: #fff; display: flex; flex-direction: column; min-height: 100vh; }
-        .sidebar h1 { font-size: 1.5rem; padding: 1.5rem; text-align: center; background: #1f2937; margin: 0; }
-        .sidebar nav a { display: block; padding: 1rem 1.5rem; color: #d1d5db; text-decoration: none; transition: background-color 0.2s; }
-        .sidebar nav a:hover, .sidebar nav a.active { background-color: #374151; color: #fff; }
+        body { display: flex; min-height: 100vh; background-color: #f8f9fa; }
+        .sidebar { width: 250px; background: #212529; color: #fff; flex-shrink: 0; }
+        .sidebar .nav-link { color: #adb5bd; }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover { color: #fff; background-color: #343a40; }
         .main-content { flex-grow: 1; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .header h2 { font-size: 1.875rem; color: #111827; margin: 0; }
-        .btn { background-color: #3b82f6; color: #fff; padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; border: none; cursor: pointer; }
-        .card { background: #fff; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
-        .card-header { padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; }
-        .card-body { padding: 1.5rem; }
-        .input-group { margin-bottom: 1.5rem; }
-        .input-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; }
-        .input-group input { width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; border: 1px solid #d1d5db; box-sizing: border-box; }
-        .success { color: #166534; background-color: #f0fdf4; border: 1px solid #86efac; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; }
-        .error { color: #b91c1c; background-color: #fef2f2; border: 1px solid #fca5a5; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h1>License Manager</h1>
-        <nav>
-            <a href="dashboard.php">Dashboard</a>
-            <a href="licenses.php">Licenses</a>
-            <a href="transactions.php">Transactions</a>
-            <a href="settings.php">Settings</a>
-            <a href="profile.php" class="active">Profile</a>
-            <a href="logout.php">Logout</a>
-        </nav>
+    <div class="sidebar d-flex flex-column p-3">
+        <h4 class="text-center">License Manager</h4>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
+            <li><a href="licenses.php" class="nav-link">Licenses</a></li>
+            <li><a href="transactions.php" class="nav-link">Transactions</a></li>
+            <li><a href="settings.php" class="nav-link">Settings</a></li>
+            <li><a href="profile.php" class="nav-link active">Profile</a></li>
+        </ul>
+        <hr>
+        <a href="logout.php" class="btn btn-danger">Logout</a>
     </div>
+
     <div class="main-content">
-        <div class="header">
-            <h2>Admin Profile</h2>
-        </div>
-        <div class="card">
-            <div class="card-header"><h3>Update Your Details</h3></div>
-            <div class="card-body">
-                <?php if (!empty($success_message)): ?>
-                    <div class="success"><?= htmlspecialchars($success_message) ?></div>
-                <?php endif; ?>
-                <?php if (!empty($error)): ?>
-                    <div class="error"><?= htmlspecialchars($error) ?></div>
-                <?php endif; ?>
-                <form method="POST">
-                    <div class="input-group">
-                        <label>Username</label>
-                        <input type="text" name="username" value="<?= htmlspecialchars($current_username) ?>" required>
+        <h2 class="mb-4">Admin Profile</h2>
+
+        <?php if ($success_message): ?>
+            <div class="alert alert-success"><?= htmlspecialchars($success_message) ?></div>
+        <?php endif; ?>
+        <?php if ($error_message): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
+        <?php endif; ?>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">Update Username</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" value="<?= htmlspecialchars($current_username) ?>" required>
+                            </div>
+                            <button type="submit" name="update_username" class="btn btn-primary">Save Username</button>
+                        </form>
                     </div>
-                    <div class="input-group">
-                        <label>New Password (leave blank to keep current password)</label>
-                        <input type="password" name="password">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">Change Password</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                            </div>
+                            <button type="submit" name="change_password" class="btn btn-primary">Change Password</button>
+                        </form>
                     </div>
-                    <div class="input-group">
-                        <label>Confirm New Password</label>
-                        <input type="password" name="password_confirm">
-                    </div>
-                    <button type="submit" class="btn">Update Profile</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
