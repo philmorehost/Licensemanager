@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-require_once '../db.php';
+require_once '../../src/db.php';
 
 // Pagination config
 $limit = 15;

@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If the request is for a file or directory that exists in the root,
+    # serve it directly (e.g., for future assets or verification files).
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Rewrite all other requests to the public directory.
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

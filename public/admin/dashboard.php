@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-require_once '../db.php';
+require_once '../../src/db.php';
 
 // Fetch stats
 $total_users = $pdo->query("SELECT count(*) FROM users")->fetchColumn();

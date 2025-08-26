@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 
-require_once '../db.php';
+require_once '../../src/db.php';
 
 $license_id = $_GET['id'] ?? null;
 if (!$license_id) {

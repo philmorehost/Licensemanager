@@ -5,7 +5,7 @@ if (!isset($_SESSION['admin_logged_in']) || !isset($_SESSION['admin_id'])) {
     exit();
 }
 
-require_once '../db.php';
+require_once '../../src/db.php';
 $admin_id = $_SESSION['admin_id'];
 
 $success_message = '';
