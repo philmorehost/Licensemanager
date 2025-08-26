@@ -26,7 +26,7 @@ $api_key = $user['api_key'] ?? '';
 
 // Fetch user's licenses
 $stmt = $pdo->prepare("
-    SELECT l.license_key, l.domain, l.status, p.name as package_name
+    SELECT l.id, l.license_key, l.domain, l.status, p.name as package_name
     FROM licenses l
     LEFT JOIN packages p ON l.package_id = p.id
     WHERE l.user_id = ?
@@ -41,7 +41,10 @@ require_once '../src/includes/header.php';
 ?>
 
 <div class="container mt-5">
-    <h2 class="mb-3">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>!</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Welcome, <?= htmlspecialchars($_SESSION['username']) ?>!</h2>
+        <a href="integration_guide.php" class="btn btn-outline-info">View Integration Guide</a>
+    </div>
 
     <?php if ($success_message): ?>
         <div class="alert alert-success"><?= htmlspecialchars($success_message) ?></div>
@@ -99,10 +102,10 @@ require_once '../src/includes/header.php';
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table">
-                    <thead><tr><th>License Key</th><th>Domain</th><th>Package</th><th>Status</th></tr></thead>
+                    <thead><tr><th>License Key</th><th>Domain</th><th>Package</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody>
                         <?php if (empty($licenses)): ?>
-                            <tr><td colspan="4" class="text-center">You have not created any licenses yet.</td></tr>
+                            <tr><td colspan="5" class="text-center">You have not created any licenses yet.</td></tr>
                         <?php else: ?>
                             <?php foreach ($licenses as $license): ?>
                                 <tr>
@@ -110,6 +113,9 @@ require_once '../src/includes/header.php';
                                     <td><?= htmlspecialchars($license['domain']) ?></td>
                                     <td><?= htmlspecialchars($license['package_name'] ?? 'N/A') ?></td>
                                     <td><span class="badge bg-success"><?= htmlspecialchars($license['status']) ?></span></td>
+                                    <td>
+                                        <a href="download_pinger.php?license_id=<?= $license['id'] ?>" class="btn btn-sm btn-secondary">Download Pinger</a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
