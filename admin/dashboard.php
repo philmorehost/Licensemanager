@@ -7,6 +7,9 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 require_once('../db.php');
 
+// Execute the database migration script to ensure the schema is up to date
+require_once('migrate.php');
+
 // Fetch licenses from the database
 $stmt = $pdo->query("SELECT * FROM licenses ORDER BY created_at DESC");
 $licenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
