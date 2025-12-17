@@ -51,6 +51,26 @@ if ($event_data['event'] === 'charge.success') {
     // --- Database interaction ---
     log_message("Attempting database interaction.");
     require_once('db.php');
+
+    // --- Schema migration ---
+    try {
+        // Check if customer_email column exists
+        $stmt = $pdo->query("SHOW COLUMNS FROM `licenses` LIKE 'customer_email'");
+        $exists = $stmt->rowCount() > 0;
+
+        if (!$exists) {
+            log_message("Column 'customer_email' not found in 'licenses' table. Adding it...");
+            $pdo->exec("ALTER TABLE `licenses` ADD COLUMN `customer_email` VARCHAR(255) NOT NULL AFTER `domain`");
+            log_message("Column 'customer_email' added successfully.");
+        }
+    } catch (PDOException $e) {
+        log_message("Database schema check/migration error: " . $e->getMessage());
+        // If something goes wrong here, we should probably exit to avoid further issues.
+        http_response_code(500);
+        exit();
+    }
+    // --- End Schema migration ---
+
     try {
         $pdo->beginTransaction();
 
