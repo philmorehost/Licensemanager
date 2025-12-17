@@ -80,9 +80,9 @@ if ($event_data['event'] === 'charge.success') {
 
     // --- Send email notification ---
     log_message("Attempting to send email notification.");
-    require 'includes/PHPMailer/src/Exception.php';
-    require 'includes/PHPMailer/src/PHPMailer.php';
-    require 'includes/PHPMailer/src/SMTP.php';
+    require 'includes/src/Exception.php';
+    require 'includes/src/PHPMailer.php';
+    require 'includes/src/SMTP.php';
 
     $settings_file = 'settings.json';
     $settings = [];
