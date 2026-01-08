@@ -7,6 +7,9 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 require_once('../db.php');
 
+// Execute the database migration script to ensure the schema is up to date
+require_once('migrate.php');
+
 // Handle POST requests for license management
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_license'])) {
